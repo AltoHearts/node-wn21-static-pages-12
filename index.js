@@ -1,37 +1,28 @@
-var http = require("http");  
+var fs = require('fs')
 
-http.createServer(function(req,res) { 
+    http = require('http'); 
 
-  var path = req.url.toLowerCase(); 
+ 
+ 
 
-  switch(path) { 
+http.createServer(function (req, res) { 
 
-    case '/': 
+  fs.readFile(__dirname + req.url, function (err,data) { 
 
-      res.writeHead(200, {'Content-Type': 'text/plain'}); 
+    if (err) { 
 
-      res.end('Home page'); 
+      res.writeHead(404); 
 
-      break; 
+      res.end(JSON.stringify(err)); 
 
-    case '/about': 
-
-      res.writeHead(200, {'Content-Type': 'text/plain'}); 
-
-      res.end('About page'); 
-
-      break; 
-
-    default: 
-
-      res.writeHead(404, {'Content-Type': 'text/plain'}); 
-
-      res.end('Not found'); 
-
-      break; 
+      return; 
 
     } 
 
-}).listen(process.env.PORT || 3000); 
+    res.writeHead(200); 
 
- 
+    res.end(data); 
+
+  }); 
+
+}).listen(3000); 
